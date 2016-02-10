@@ -16,7 +16,7 @@ function sendCurrentUsers(socket) {
     if (typeof info === 'undefined') {
         return;
     }
-    Object.keys(clientInfo).forEach(function (socketId) {
+    Object.keys(clientInfo).forEach(function(socketId) {
         var userInfo = clientInfo[socketId];
         if (info.room === userInfo.room) {
             users.push(userInfo.name);
@@ -26,12 +26,12 @@ function sendCurrentUsers(socket) {
         name: 'System',
         text: 'Current users: ' + users.join(', '),
         timestamp: moment().valueOf()
-    })
-};
+    });
+}
 
-io.on('connection', function (socket) {
+io.on('connection', function(socket) {
     console.log('User connected via socket.io!');
-    socket.on('disconnect', function () {
+    socket.on('disconnect', function() {
         var userData = clientInfo[socket.id];
         if (typeof userData !== 'undefined') {
             socket.leave(userData.room);
@@ -41,12 +41,11 @@ io.on('connection', function (socket) {
                 timestamp: moment().valueOf()
             });
             delete clientInfo[socket.id];
-        }
-        else {
+        } else {
 
         }
-    })
-    socket.on('joinRoom', function (req) {
+    });
+    socket.on('joinRoom', function(req) {
         clientInfo[socket.id] = req;
         socket.join(req.room);
         socket.broadcast.to(req.room).emit('message', {
@@ -56,14 +55,13 @@ io.on('connection', function (socket) {
         });
     });
 
-    socket.on('message', function (message) {
+    socket.on('message', function(message) {
         console.log('Message received: ' + message.text);
 
         if (message.text === '@currentUsers') {
             sendCurrentUsers(socket);
-        }
-        else {
-            message.timestamp = moment().valueOf()
+        } else {
+            message.timestamp = moment().valueOf();
             io.to(clientInfo[socket.id].room).emit('message', message);
         }
     });
@@ -77,6 +75,6 @@ io.on('connection', function (socket) {
     });
 });
 
-http.listen(PORT, function () {
+http.listen(PORT, function() {
     console.log('Server started!');
 });
