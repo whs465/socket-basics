@@ -2,5 +2,11 @@
     min-height: 100vh;
     margin: 0;
     display: flex;
-    align-items: center ;
+    align-items: center;
+}
+h1 {
+    margin: 24px 0;
+}
+.message p {
+    margin: 6px 0;
 }
